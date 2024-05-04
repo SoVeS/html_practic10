@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Книги</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .card {
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Список книг</h1>
+        <div id="books-list"></div>
+        <hr>
+        <div class="row">
+            <div class="col-md-4">
+                <input type="text" id="title" class="form-control mb-2" placeholder="Название книги">
+            </div>
+            <div class="col-md-4">
+                <input type="text" id="Author" class="form-control mb-2" placeholder="Автор">
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary btn-block" onclick="addBook()">Добавить книгу</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class Book {
+            constructor(title, Author) {
+                this.title = title;
+                this.Author = Author;
+            }
+        }
+        let Books = [];
+        function addBook() {
+            const titleInput = document.getElementById('title');
+            const AuthorInput = document.getElementById('Author');
+
+            const title = titleInput.value.trim();
+            const Author = AuthorInput.value.trim();
+
+            if (!title || !Author) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            const newBook = new Book(title, Author);
+            Books.push(newBook);
+
+            displayBooks();
+            titleInput.value = '';
+            AuthorInput.value = '';
+        }
+
+        function deleteBook(index) {
+            Books.splice(index, 1);
+            displayBooks();
+        }
+
+        function displayBooks() {
+            const BooksList = document.getElementById('books-list');
+            BooksList.innerHTML = '';
+
+            Books.forEach((Book, index) => {
+                const BookElement = document.createElement('div');
+                BookElement.classList.add('card', 'mb-2');
+                BookElement.innerHTML = `
+                    <div class="card-body">
+                        <h5 class="card-title">${Book.title}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">${Book.Author}</h6>
+                        <button class="btn btn-danger" onclick="deleteBook(${index})">Удалить</button>
+                        <button class="btn btn-success" onclick="updateBook(${index})">Изменить</button>
+                    </div>
+                `;
+                BooksList.appendChild(BookElement);
+            });
+        }
+        function updateBook(index){
+            const titleInput = document.getElementById('title');
+            const AuthorInput = document.getElementById('Author');
+
+            const title = titleInput.value.trim();
+            const Author = AuthorInput.value.trim();
+
+            if (!title || !Author) {
+                alert('Пожалуйста, заполните все поля');
+                return;
+            }
+            else {
+                deleteBook(index);
+                addBook();
+
+                titleInput.value = '';
+                AuthorInput.value = '';
+            }
+        }
+    </script>
+</body>
+</html>
